@@ -1,5 +1,12 @@
+import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useVault } from '../../context/VaultContext';
+
+const TABS = [
+  { to: '/', label: 'Contraseñas' },
+  { to: '/contacts', label: 'Contactos' },
+  { to: '/people', label: 'Personas' },
+];
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -45,6 +52,27 @@ export default function Header() {
           </button>
         </div>
       </div>
+
+      {isUnlocked && (
+        <nav className="max-w-5xl mx-auto px-4 flex gap-1">
+          {TABS.map((tab) => (
+            <NavLink
+              key={tab.to}
+              to={tab.to}
+              end={tab.to === '/'}
+              className={({ isActive }) =>
+                `px-4 py-2.5 text-sm font-medium transition-colors ${
+                  isActive
+                    ? 'text-blue-400 border-b-2 border-blue-400'
+                    : 'text-gray-400 hover:text-white border-b-2 border-transparent'
+                }`
+              }
+            >
+              {tab.label}
+            </NavLink>
+          ))}
+        </nav>
+      )}
     </header>
   );
 }

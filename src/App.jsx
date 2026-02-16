@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { VaultProvider, useVault } from './context/VaultContext';
 import LoginPage from './components/Auth/LoginPage';
@@ -6,9 +6,12 @@ import ProtectedRoute from './components/Layout/ProtectedRoute';
 import Header from './components/Layout/Header';
 import VaultUnlock from './components/Vault/VaultUnlock';
 import PasswordList from './components/Vault/PasswordList';
+import ContactList from './components/Contacts/ContactList';
+import PersonList from './components/People/PersonList';
 
 function VaultGate() {
   const { isUnlocked, loading } = useVault();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -20,6 +23,10 @@ function VaultGate() {
 
   if (!isUnlocked) return <VaultUnlock />;
 
+  const section = location.pathname;
+
+  if (section === '/contacts') return <ContactList />;
+  if (section === '/people') return <PersonList />;
   return <PasswordList />;
 }
 
@@ -53,6 +60,22 @@ function AppRoutes() {
       />
       <Route
         path="/"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/contacts"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/people"
         element={
           <ProtectedRoute>
             <Dashboard />
